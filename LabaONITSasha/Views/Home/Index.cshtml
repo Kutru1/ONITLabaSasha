@@ -1,0 +1,132 @@
+﻿@using LabaONITSasha.Models
+@model IEnumerable<CatModel>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Котята";
+}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+
+    <link rel="stylesheet" href="~lib/bootstrap/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Коты</h2>
+        <div>
+            <h2>Список котов</h2>
+            <a asp-action="LoadCatsFromJson" class="btn btn-primary">Загрузить данные из JSON</a>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <table class="table table-striped table-hover">
+                    <thead class="thead-purple">
+                        <tr>
+                            <th>Имя</th>
+                            <th>Дата Рождения</th>
+                            <th>Пол</th>
+                            <th>Дата усыновления</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var catt in Model)
+                        {
+                            <tr>
+                                <td>@catt.Name</td>
+                                <td>@catt.BirthDate.ToShortDateString()</td>
+                                <td>
+                                    @(catt.Gender == 1 ? "Мужской" : "Женский")
+                                </td>
+                                <td>@catt.DateOfPet.ToShortDateString()</td>
+                                <td>
+                                    <form method="post" asp-action="Delete" asp-route-id="@catt.ID" class="dinline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-primary">Удалить</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+
+
+                <div class="row">
+                    <div class="col-md-6 filter-container">
+                        <h3 class="mt-4">Добавить нового кота</h3>
+                        <form method="post" asp-controller="Home" asp-action="Add">
+                            @Html.AntiForgeryToken()
+                            <div class="form-group">
+                                <label>Имя:</label>
+                                <input type="text" class="form-control" name="name" placeholder="Введите имя" required />
+                            </div>
+                            <div class="form-group">
+                                <label>Дата рождения:</label>
+                                <input type="date" class="form-control" name="BirthDate" required />
+                            </div>
+                            <div class="form-group">
+                                <label>Пол:</label>
+                                <select class="form-control" name="Gender" required>
+                                    <option value="0">Женский</option>
+                                    <option value="1">Мужской</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Дата усыновления:</label>
+                                <input type="date" class="form-control" name="DateOfPet" required />
+                            </div>
+                            <button type="submit" class="btn btn-primary">Добавить кота</button>
+                        </form>
+                    </div>
+
+
+                    <div class="col-md-6 filter-container">
+                        <h3 class="mt-4">Фильтр котов</h3>
+                        <form method="get" asp-controller="Home" asp-action="Filter">
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label>Возраст с:</label>
+                                    <input type="number" class="form-control" name="AgeFrom" min="0" placeholder="Минимальный возраст" />
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label>Возраст до:</label>
+                                    <input type="number" class="form-control" name="AgeTo" min="0" placeholder="Максимальный возраст" />
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label>Усыновлены до:</label>
+                                    <input type="date" class="form-control" name="AdmissionBefore" />
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label>Усыновлены после:</label>
+                                    <input type="date" class="form-control" name="AdmissionAfter" />
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Фильтровать</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>

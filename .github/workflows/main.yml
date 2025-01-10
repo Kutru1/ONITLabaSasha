@@ -49,6 +49,6 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: ONITLabaSasha/LabaONITSasha/Dockerfile
+          file: LabaONITSasha/Dockerfile
           push: true
           tags: kutrul/onit:latest
